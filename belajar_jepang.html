@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Belajar Bahasa Jepang</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial;
+  background:#f4f6f9;
+  overflow-x:hidden;
+
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+}
+main{
+  flex:1;
+}
+header{
+  background:#2c3e50;
+  color:white;
+  text-align:center;
+  padding:20px;
+}
+
+nav{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:8px;
+  background:#34495e;
+  padding:10px;
+}
+.quiz-menu{
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+  margin-top:20px;
+}
+
+.quiz-menu button{
+  background:#3498db;
+  color:white;
+  border:none;
+  padding:13px;
+  font-size:18px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.quiz-menu button:hover{
+  background:#2980b9;
+}
+
+nav button{
+  border:none;
+  padding:10px 12px;
+  background:#3498db;
+  font-size:18px;
+  font-weight:bold;
+  color:white;
+  border-radius:6px;
+  cursor:pointer;
+}
+footer{
+  background:#2c3e50;
+  color:white;
+  text-align:center;
+  padding:10px;
+  margin-top:30px;
+  font-size:14px;
+}
+footer p{
+  margin:0;
+}
+
+section{
+  display:none;
+  padding:15px;
+}
+
+.active{display:block}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(70px,1fr));
+  gap:10px;
+}
+
+.card{
+  background:aqua;
+  padding:12px;
+  border-radius:10px;
+  text-align:center;
+  word-wrap: break-word;   /* ⛔ biar tidak keluar */
+  overflow-wrap: break-word;
+    min-height: 70px; /* atau 90px */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.quiz-box{
+  background:white;
+  padding:15px;
+  border-radius:10px;
+  text-align:center;
+  border:2px solid black;
+}
+
+.option{
+  margin:10px 0;
+  padding:10px;
+  background:#ddd;
+  font-size: 18px;
+  border: 2px solid black;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.correct{
+  background:#2ecc71 !important;
+  color:white;
+}
+
+@media(max-width:480px){
+  nav button{font-size:12px}
+}
+</style>
+</head>
+
+<body>
+<main>
+<header>
+<h1>Belajar Bahasa Jepang🇯🇵</h1>
+</header>
+
+<nav>
+<button onclick="showPage('dashboard')">Dashboard</button>
+<button onclick="showPage('hiragana')">Hiragana</button>
+<button onclick="showPage('katakana')">Katakana</button>
+<button onclick="showPage('kanji')">Kanji</button>
+<button onclick="showPage('quizMenu')">Quiz</button>
+<button onclick="showPage('vocab')">Kosakata</button>
+</nav>
+
+<section id="dashboard" class="active">
+<h2>Dashboard</h2>
+<p style="text-align: justify;">Selamat datang di Platform Belajar Bahasa Jepang
+Pelajari huruf Hiragana, Katakana, Kanji, serta kosakata dasar.
+Latih kemampuanmu dengan fitur quiz interaktif.</p>
+<p style="text-align: justify;">Pilih menu (berwarna biru) untuk mulai belajar</p>
+</section>
+
+<section id="hiragana">
+    <button class="back-btn" onclick="showPage('dashboard')">← Kembali</button>
+<h2>Hiragana</h2>
+<div class="grid" id="hiraganaList"></div>
+<h2>Hiragana Dakuten & Handakuten</h2>
+<div class="grid" id="hiraganaDakutenList"></div>
+</section>
+
+<section id="katakana">
+  <button class="back-btn" onclick="showPage('dashboard')">← Kembali</button>
+<h2>Katakana</h2>
+<div class="grid" id="katakanaList"></div>
+<h2>Katakana Dakuten & Handakuten</h2>
+<div class="grid" id="katakanaDakutenList"></div>
+</section>
+
+<section id="kanji">
+  <button class="back-btn" onclick="showPage('dashboard')">← Kembali</button>
+<h2>Kanji Dasar</h2>
+<div class="grid" id="kanjiList"></div>
+<h2>Kanji Angka</h2>
+<div class="grid" id="kanjiAngkaList"></div>
+</section>
+
+<section id="quizMenu">
+  <button class="back-btn" onclick="showPage('dashboard')">← Kembali</button>
+<h2>Pilih Quiz</h2>
+  <div class="quiz-menu">
+<button onclick="startQuiz('hiragana')">Hiragana</button>
+<button onclick="startQuiz('katakana')">Katakana</button>
+<button onclick="startQuiz('vocab')">Kosakata</button>
+</div>
+</section>
+
+<section id="quizGame">
+  <button class="back-btn" onclick="showPage('quizMenu')">← Kembali</button>
+<h2 id="quizTitle"></h2>
+<div class="quiz-box">
+<h1 id="question"></h1>
+<div id="options"></div>
+</div>
+</section>
+
+<section id="vocab">
+  <button class="back-btn" onclick="showPage('dashboard')">← Kembali</button>
+<h2>Kosakata</h2>
+<h3>Kata Benda</h3>
+<ul id="nounList"></ul>
+
+<h3>Kata Kerja</h3>
+<ul id="verbList"></ul>
+
+
+
+<h3>Kata Sifat </h3>
+<ul id="adjList"></ul>
+</section>
+
+<script>
+// NAV
+function showPage(id){
+  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+// DATA
+const hiragana = [
+["あ","a"],["い","i"],["う","u"],["え","e"],["お","o"],
+["か","ka"],["き","ki"],["く","ku"],["け","ke"],["こ","ko"],
+["さ","sa"],["し","shi"],["す","su"],["せ","se"],["そ","so"],
+["た","ta"],["ち","chi"],["つ","tsu"],["て","te"],["と","to"],
+["な","na"],["に","ni"],["ぬ","nu"],["ね","ne"],["の","no"],
+["は","ha"],["ひ","hi"],["ふ","fu"],["へ","he"],["ほ","ho"],
+["ま","ma"],["み","mi"],["む","mu"],["め","me"],["も","mo"],
+["や","ya"],["ゆ","yu"],["よ","yo"],
+["ら","ra"],["り","ri"],["る","ru"],["れ","re"],["ろ","ro"],
+["わ","wa"],["を","wo"],["ん","n"]
+];
+const hiraganaDakuten = [
+  ["が","ga"],["ぎ","gi"],["ぐ","gu"],["げ","ge"],["ご","go"],
+  ["ざ","za"],["じ","ji"],["ず","zu"],["ぜ","ze"],["ぞ","zo"],
+  ["だ","da"],["ぢ","ji"],["づ","zu"],["で","de"],["ど","do"],
+  ["ば","ba"],["び","bi"],["ぶ","bu"],["べ","be"],["ぼ","bo"],
+  ["ぱ","pa"],["ぴ","pi"],["ぷ","pu"],["ぺ","pe"],["ぽ","po"]
+];
+
+const katakana = [
+["ア","a"],["イ","i"],["ウ","u"],["エ","e"],["オ","o"],
+["カ","ka"],["キ","ki"],["ク","ku"],["ケ","ke"],["コ","ko"],
+["サ","sa"],["シ","shi"],["ス","su"],["セ","se"],["ソ","so"],
+["タ","ta"],["チ","chi"],["ツ","tsu"],["テ","te"],["ト","to"],
+["ナ","na"],["ニ","ni"],["ヌ","nu"],["ネ","ne"],["ノ","no"],
+["ハ","ha"],["ヒ","hi"],["フ","fu"],["ヘ","he"],["ホ","ho"],
+["マ","ma"],["ミ","mi"],["ム","mu"],["メ","me"],["モ","mo"],
+["ヤ","ya"],["ユ","yu"],["ヨ","yo"],
+["ラ","ra"],["リ","ri"],["ル","ru"],["レ","re"],["ロ","ro"],
+["ワ","wa"],["ヲ","wo"],["ン","n"]
+];
+const katakanaDakuten = [
+["ガ","ga"],["ギ","gi"],["グ","gu"],["ゲ","ge"],["ゴ","go"],
+["ザ","za"],["ジ","ji"],["ズ","zu"],["ゼ","ze"],["ゾ","zo"],
+["ダ","da"],["ヂ","ji"],["ヅ","zu"],["デ","de"],["ド","do"],
+["バ","ba"],["ビ","bi"],["ブ","bu"],["ベ","be"],["ボ","bo"],
+["パ","pa"],["ピ","pi"],["プ","pu"],["ペ","pe"],["ポ","po"]
+];
+
+const kanji = [
+["日","hari"],["月","bulan"],["火","api"],["水","air"],["木","pohon"],
+["金","emas"],["土","tanah"],["人","orang"],["山","gunung"],["川","sungai"]
+];
+
+const kanjiAngka = [
+["一","1 (ichi)"],
+["二","2 (ni)"],
+["三","3 (san)"],
+["四","4 (yon)"],
+["五","5 (go)"],
+["六","6 (roku)"],
+["七","7 (nana)"],
+["八","8 (hachi)"],
+["九","9 (kyuu)"],
+["十","10 (juu)"],
+["百","100 (hyaku)"],
+["千","1000 (sen)"],
+["万","10000 (man)"]
+];
+
+// LOAD LIST
+function loadList(data,id){
+  data.forEach(d=>{
+    document.getElementById(id).innerHTML += `<div class="card">${d[0]}<br>${d[1]}</div>`;
+  });
+}
+
+loadList(hiragana,"hiraganaList");
+loadList(hiraganaDakuten, "hiraganaDakutenList");
+loadList(katakana,"katakanaList");
+loadList(katakanaDakuten, "katakanaDakutenList");
+loadList(kanji,"kanjiList");
+loadList(kanjiAngka,"kanjiAngkaList");
+
+// VOCAB (50+50)
+const nouns = [
+["inu (いぬ)","anjing"],
+["neko (ねこ)","kucing"],
+["hon (ほん)","buku"],
+["mizu (みず)","air"],
+["kuruma (くるま)","mobil"],
+["ie (いえ)","rumah"],
+["gakkou (がっこう)","sekolah"],
+["denwa (でんわ)","telepon"],
+["kasa (かさ)","payung"],
+["isu (いす)","kursi"],
+["tsukue (つくえ)","meja"],
+["pan (パン)","roti"],
+["sushi (すし)","sushi"],
+["ringo (りんご)","apel"],
+["sakana (さかな)","ikan"],
+["tamago (たまご)","telur"],
+["kaban (かばん)","tas"],
+["tokei (とけい)","jam"],
+["kutsu (くつ)","sepatu"],
+["megane (めがね)","kacamata"],
+["yama (やま)","gunung"],
+["kawa (かわ)","sungai"],
+["umi (うみ)","laut"],
+["machi (まち)","kota"],
+["eki (えき)","stasiun"],
+["basu (バス)","bus"],
+["densha (でんしゃ)","kereta"],
+["jitensha (じてんしゃ)","sepeda"],
+["kamera (カメラ)","kamera"],
+["pasokon (パソコン)","komputer"],
+["terebi (テレビ)","TV"],
+["rajio (ラジオ)","radio"],
+["ongaku (おんがく)","musik"],
+["eiga (えいが)","film"],
+["hana (はな)","bunga"],
+["ki (き)","pohon"],
+["sora (そら)","langit"],
+["hoshi (ほし)","bintang"],
+["taiyou (たいよう)","matahari"],
+["tsuki (つき)","bulan"],
+["kumo (くも)","awan"],
+["ame (あめ)","hujan"],
+["yuki (ゆき)","salju"],
+["kaze (かぜ)","angin"],
+["natsu (なつ)","musim panas"],
+["aki (あき)","musim gugur"],
+["fuyu (ふゆ)","musim dingin"],
+["haru (はる)","musim semi"]
+];
+
+const verbs = [
+["taberu (たべる)","makan"],
+["nomu (のむ)","minum"],
+["miru (みる)","melihat"],
+["kiku (きく)","mendengar"],
+["hanasu (はなす)","berbicara"],
+["yomu (よむ)","membaca"],
+["kaku (かく)","menulis"],
+["aruku (あるく)","berjalan"],
+["hashiru (はしる)","lari"],
+["oyogu (およぐ)","berenang"],
+["kau (かう)","membeli"],
+["uru (うる)","menjual"],
+["tsukuru (つくる)","membuat"],
+["neru (ねる)","tidur"],
+["okiru (おきる)","bangun"],
+["benkyou suru (べんきょうする)","belajar"],
+["hataraku (はたらく)","bekerja"],
+["yasumu (やすむ)","istirahat"],
+["asobu (あそぶ)","bermain"],
+["matsu (まつ)","menunggu"],
+["shinpai suru (しんぱいする)","khawatir"],
+["yakusoku suru (やくそくする)","berjanji"],
+["tetsudau (てつだう)","membantu"],
+["shoukai suru (しょうかいする)","memperkenalkan"],
+["soudan suru (そうだんする)","berkonsultasi"],
+["homeru (ほめる)","memuji"],
+["shikarareru (しかられる)","dimarahi"],
+["inoru (いのる)","berdoa"],
+["nusumu (ぬすむ)","mencuri"],
+["uragiru (うらぎる)","mengkhianati"],
+["damasu (だます)","menipu"],
+["nagusameru (なぐさめる)","menghibur"],
+["utagau (うたがう)","mencurigai"],
+["oshieru (おしえる)","mengajar / memberitahu"],
+["kansha suru (かんしゃする)","berterima kasih"]
+];
+
+const adjectives = [
+["atsui (あつい)","panas"],
+["samui (さむい)","dingin"],
+["ookii (おおきい)","besar"],
+["chiisai (ちいさい)","kecil"],
+["takai (たかい)","mahal / tinggi"],
+["yasui (やすい)","murah"],
+["hayai (はやい)","cepat"],
+["osoi (おそい)","lambat"],
+["atarashii (あたらしい)","baru"],
+["furui (ふるい)","lama / tua"],
+["ii (いい)","baik"],
+["warui (わるい)","buruk"],
+["tanoshii (たのしい)","menyenangkan"],
+["tsumaranai (つまらない)","membosankan"],
+["oishii (おいしい)","enak"],
+["mazui (まずい)","tidak enak"],
+["kirei (きれい)","indah / bersih"],
+["kitanai (きたない)","kotor"],
+["akarui (あかるい)","terang"],
+["kurai (くらい)","gelap"],
+["omoshiroi (おもしろい)","menarik"],
+["isogashii (いそがしい)","sibuk"],
+["hima (ひま)","luang"],
+["genki (げんき)","sehat"],
+["yowai (よわい)","lemah"],
+["tsuyoi (つよい)","kuat"],
+["amai (あまい)","manis"],
+["nigai (にがい)","pahit"],
+["karai (からい)","pedas"],
+["shoppai (しょっぱい)","asin"],
+["atatakai (あたたかい)","hangat"],
+["suzushii (すずしい)","sejuk"],
+["kowai (こわい)","menakutkan"],
+["yasashii (やさしい)","baik hati"],
+["muzukashii (むずかしい)","sulit"],
+["kantan (かんたん)","mudah"],
+["tooi (とおい)","jauh"],
+["chikai (ちかい)","dekat"],
+["takusan (たくさん)","banyak"],
+["sukunai (すくない)","sedikit"],
+["nagai (ながい)","panjang"],
+["mijikai (みじかい)","pendek"],
+["hiroi (ひろい)","luas"],
+["semai (せまい)","sempit"],
+["omoi (おもい)","berat"],
+["karui (かるい)","ringan"],
+["ureshii (うれしい)","senang"],
+["kanashii (かなしい)","sedih"]
+];
+// tampil vocab
+
+nouns.forEach(v=>{
+  document.getElementById("nounList").innerHTML += `<li>${v[0]} - ${v[1]}</li>`;
+});
+verbs.forEach(v=>{
+  document.getElementById("verbList").innerHTML += `<li>${v[0]} - ${v[1]}</li>`;
+});
+adjectives.forEach(a=>{
+  document.getElementById("adjList").innerHTML += `<li>${a[0]} - ${a[1]}</li>`;
+});
+// QUIZ
+
+// QUIZ
+let quizType, current;
+let answered = false; // ⛔ anti spam
+
+function startQuiz(type){
+  quizType = type;
+  showPage("quizGame");
+
+  document.getElementById("quizTitle").innerText =
+    type==="hiragana"?"Quiz Hiragana":
+    type==="katakana"?"Quiz Katakana":
+    "Quiz Kosakata";
+
+  nextQuestion();
+}
+
+function nextQuestion(){
+  answered = false; // reset tiap soal
+
+  let data;
+
+  if(quizType==="hiragana") data=hiragana;
+  else if(quizType==="katakana") data=katakana;
+  else data=[...nouns,...verbs];
+
+  current = data[Math.floor(Math.random()*data.length)];
+
+  let askReverse = Math.random() > 0.5;
+
+  let questionText = askReverse ? current[1] : current[0];
+  let correctAnswer = askReverse ? current[0] : current[1];
+
+  document.getElementById("question").innerText = questionText;
+
+  let options=[correctAnswer];
+  while(options.length<4){
+    let rand=data[Math.floor(Math.random()*data.length)];
+    let val = askReverse ? rand[0] : rand[1];
+    if(!options.includes(val)) options.push(val);
+  }
+
+  options.sort(()=>Math.random()-0.5);
+
+  let html="";
+  options.forEach(opt=>{
+    html+=`<div class="option" onclick="check(this,'${opt}','${correctAnswer}')">${opt}</div>`;
+  });
+
+  document.getElementById("options").innerHTML=html;
+}
+
+function check(el,ans,correctAnswer){
+  if(answered) return; // ⛔ cegah spam
+  answered = true;
+
+  let options = document.querySelectorAll(".option");
+
+  options.forEach(opt=>{
+    let text = opt.innerText;
+
+    if(text === correctAnswer){
+      opt.classList.add("correct");
+      opt.innerHTML = text + " ✔";
+    }
+  });
+
+  if(ans !== correctAnswer){
+    el.style.background = "red";
+    el.innerHTML += " ❌";
+  }
+
+  setTimeout(nextQuestion,1000);
+}
+
+</script>
+</main>
+<footer>
+  <p>© 2026 Belajar Bahasa Jepang | Dibuat oleh Alvino Rafa A. | All Rights Reserved.</p>
+</footer>
+</body>
+</html>
